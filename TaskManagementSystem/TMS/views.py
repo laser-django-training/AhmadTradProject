@@ -45,9 +45,16 @@ def index(request):
 		"tasks": tasks
 		})
 def subtasks(request, task_id):
-	tasks = Task.objects.all()
-	subtasks = Task.objects.get(id = int(task_id))
-	return render(request, "index.html",{
+	message = None
+	subtasks = SubTask.objects.filter(task__id = int(task_id))
+	if not subtasks:
+		message = "No sub tasks for this task"
+		tasks = Task.objects.all()
+		return render(request, "index.html", {
 		"tasks": tasks,
-		"subtasks": subtasks
+		"message": message
 		})
+	else:
+		return render(request, "sub_task.html",{
+			"subtasks": subtasks
+			})
